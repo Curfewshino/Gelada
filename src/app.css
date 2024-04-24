@@ -4,9 +4,9 @@
 
 @layer components {
     .dynav {
-      @apply font-normal px-2 ml-4 py-1 border-2 border-black/40 rounded-md text-center  hover:border-indigo-400 hover:p-2 hover:font-semibold duration-200; 
+      @apply font-normal px-2 ml-4 py-1 border-2 border-black/40 rounded-md text-center  hover:border-primary-600 hover:p-2 hover:font-semibold duration-200; 
     }
     .homebox{
-      @apply flex-initial box-border border-[3px] rounded-[10px] border-black/40 w-[30%] h-[250px] relative;
+      @apply flex-initial box-border border-[3px] rounded-[10px] border-black/40 w-[300px] h-[250px] scroll-mr-4;
     }
 }

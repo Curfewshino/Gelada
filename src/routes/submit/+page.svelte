@@ -1,10 +1,17 @@
 <script>
-// @ts-nocheck
+    // @ts-nocheck
     import '../../app.css'
     import Dropzone from "svelte-file-dropzone";
-    import { invalidate } from '$app/navigation';
+
+    const messages = [
+        "Drop your pdf here!\n or click me!\n (100Mb or 10 Files Limit)",
+        "Maximum amount of Files reached",
+        "Your file is too large!"
+    ]
+    let message = messages[0];
     
     const maxfilenamelength = 22;
+    let stopacceptFiles = false;
     let files = {
         accepted: [],
         rejected: []
@@ -12,10 +19,11 @@
   
     function handleFilesSelect(e) {
         console.log(e.detail);
+        message = messages[0];
         const { acceptedFiles, fileRejections } = e.detail;
         files.accepted = [...files.accepted, ...acceptedFiles];
         files.rejected = [...files.rejected, ...fileRejections];
-        console.log(files.accepted.length);
+        limiter();
     }
     function namelengthcheck(name){
         if(name.length>=maxfilenamelength){
@@ -26,13 +34,29 @@
     function handleRemoveFile(e, index) {
         files.accepted.splice(index, 1);
         files.accepted = [...files.accepted];
+        limiter();
     }
     function handleRemoveAll() {
         files.accepted = [];
+        limiter();
     }
     function handleSubmission(){
         console.log("Pretend that the file is sent na");
-        location.reload();
+        console.dir(files, {'maxArrayLength': null})
+        // location.reload();
+    }
+    function limiter(){
+        if (files.accepted.length>=10){
+            stopacceptFiles = true
+            message = messages[1]
+            files.accepted.length=10;
+        }else{
+            stopacceptFiles = false
+            message = messages[0]
+        }
+    }
+    function handleRejection(e){
+        message = messages[2];
     }
 
 
@@ -41,9 +65,8 @@
     <div class="w-full max-w-md">
         <form class="bg-white shadow-md rounded px-8 pt-2 pb-8 mb-4 m" id="loginForm">
             <p class="text-center text-gray-600 font-semibold mb-4">Submit your files</p>
-            <Dropzone on:drop={handleFilesSelect} accept={'.pdf'} maxSize={100000000}>
-                <p>Drop your pdf here! (100Mb limit)</p>
-                <p>or click me!</p>
+            <Dropzone on:drop={handleFilesSelect} accept={'.pdf'} maxSize={100000000} disabled={stopacceptFiles} on:droprejected={handleRejection}>
+                <p class="text-center whitespace-pre-line">{message}</p>
             </Dropzone>
             <ol class="overflow-clip content-center">
                 {#each files.accepted as item, index}
