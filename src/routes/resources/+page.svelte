@@ -1,19 +1,19 @@
 <script lang="ts">
     import "../../app.css";
-    import { page } from '$app/stores';
     import { Search, Button } from 'flowbite-svelte';
+    let value = '';
     function searchHandler(){
-        console.log($page.url.searchParams.get('tag'));
+        console.log(value);
     }
 
 
 </script>
 <div class="m-4">
-    <h1 class="text-4xl">
-        <p1>Resources</p1>
-        <Search on:input={searchHandler}>
-            <Button>Search</Button>
-        </Search>
-    </h1>
-   
+    <p1 class="text-4xl">Resources</p1>
+    <form class="relative flex items-center" id="example-form" on:submit={searchHandler}>
+        <div class="flex"></div>
+        <Search class="w-[40%]" bind:value />
+    </form>
 </div>
+
+
